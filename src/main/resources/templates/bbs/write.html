@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시글 작성</title>
+</head>
+<body>
+<h3>게시글 작성</h3>
+<form action="/bbss/write" method="POST">
+  <div><label for="">제목</label><input type="text" name="bbsHead" id=""></div>
+  <div><label for="">작성자</label><input type="text" name="bbsWriter" id=""></div>
+  <div>
+    <label for="">본문</label>
+    <textarea name="bbsBody" id="" rows="10" cols="50"></textarea>
+  </div>
+  <div>
+    <button type="submit" id="btnAdd">등록</button>
+    <button type="button" id="btnFindAll">목록</button>
+  </div>
+</form>
+<script>
+  //목록
+  const btnFindAll = document.getElementById('btnFindAll');
+  btnFindAll.addEventListener('click',e=>{
+    location.href = '/bbss';   // GET http://localhost:9080/bbss
+  });
+</script>
+</body>
+</html>
