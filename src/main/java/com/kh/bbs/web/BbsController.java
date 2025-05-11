@@ -9,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -47,8 +44,8 @@ public class BbsController {
       WriteForm writeForm,
       RedirectAttributes redirectAttributes
 
-  ){
-    log.info("bbsHead={}, bbsWriter={}, bbsBody={}",writeForm.getBbsHead(),writeForm.getBbsWriter(),writeForm.getBbsBody());
+  ) {
+    log.info("bbsHead={}, bbsWriter={}, bbsBody={}", writeForm.getBbsHead(), writeForm.getBbsWriter(), writeForm.getBbsBody());
 
     Bbs bbs = new Bbs();
     bbs.setBbsHead(writeForm.getBbsHead());
@@ -85,5 +82,36 @@ public class BbsController {
     model.addAttribute("detailForm", detailForm);
 
     return "bbs/detailForm";
+  }
+
+  //게시글 삭제(단건)
+  @GetMapping("/{id}/del")
+  public String deleteById(@PathVariable("id") Long bbsId) {
+
+    int rows = bbsSVC.deleteById(bbsId);
+
+    return "redirect:/bbss";
+  }
+
+  //게시글 삭제(여러건)
+  @PostMapping("/del")
+  public String deleteByIds(@RequestParam("bbsIds") List<Long> bbsIds) {
+
+    log.info("bbsIds={}", bbsIds);
+
+    int rows = bbsSVC.deleteByIds(bbsIds);
+
+    log.info("게시글 {}건이 삭제됨.", rows);
+
+    return "redirect:/bbss";
+  }
+
+
+  //게시글 수정
+  @GetMapping("/{id}/edit")
+  public String editById() {
+
+    return "bbs/edit";
+
   }
 }

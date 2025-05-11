@@ -7,13 +7,13 @@
   <title th:text="${detailForm.bbsHead}">title</title>
 </head>
 <body>
-<form action="">
+<form action="" method="">
   <h2 th:text="${detailForm.bbsHead}">제목</h2>  <!-- 제목을 페이지 내에 표시 -->
-  <div><label for="">게시글ID</label><ul th:text="${detailForm.bbsId}">게시글ID</ul></div>  <!-- 게시글ID 표시 -->
-  <div><label for="">작성자</label><ul th:text="${detailForm.bbsWriter}">작성자</ul> </div> <!-- 작성자 표시 -->
-  <div><label for="">작성일시</label><ul th:text="${#dates.format(detailForm.bbsDate, 'yyyy-MM-dd HH:mm')}">작성일자</ul> </div><!-- 작성일자 표시 -->
-  <div><label for="">수정일시</label><ul th:text="${#dates.format(detailForm.bbsUpdate, 'yyyy-MM-dd HH:mm')}">수정일자</ul> </div><!-- 수정일자 표시 -->
-  <div><label for="">내용</label><ul th:text="${detailForm.bbsBody}">내용</ul> </div> <!-- 게시글 내용 표시 -->
+  <div><label for="">게시글ID</label><input type="text" name ="bbsId" id = "bbsId" th:value="${detailForm.bbsId}" readonly></input></div>  <!-- 게시글ID 표시 -->
+  <div><label for="">작성자</label><input type="text" name ="bbsWriter" th:value="${detailForm.bbsWriter}" readonly></input> </div> <!-- 작성자 표시 -->
+  <div><label for="">작성일시</label><input type="text" name ="bbsDate" th:value="${#dates.format(detailForm.bbsDate, 'yyyy-MM-dd HH:mm')}" readonly></input> </div><!-- 작성일자 표시 -->
+  <div><label for="">수정일시</label><input type="text" name ="bbsUpdate" th:value="${#dates.format(detailForm.bbsUpdate, 'yyyy-MM-dd HH:mm')}" readonly></input> </div><!-- 수정일자 표시 -->
+  <div><label for="">내용</label><textarea type="text" name ="bbsBody" th:text="${detailForm.bbsBody}"  rows="10" cols="50" readonly></textarea> </div> <!-- 게시글 내용 표시 -->
   <div>
     <button type="button" id="btnUpdate">수정</button>
     <button type="button" id="btnDelete">삭제</button>
@@ -21,21 +21,34 @@
   </div>
 </form>
 <script>
-  //목록
-  const $btnFindAll = document.getElementById('btnFindAll');
-  $btnFindAll.addEventListener('click',e=>{
-    location.href = `/bbss`;
-    },false);
-
   //삭제
   const $btnDelete = document.getElementById('btnDelete');
-  $btnDelete.addEventListener('click',e=>{
+  $btnDelete.addEventListener('click', e=>{
     const $bbsId = document.getElementById('bbsId');
     const id = $bbsId.value;
   if(window.confirm('삭제하시겠습니까?')){
     location.href = `/bbss/${id}/del`;
-    }
+   }
   }, false);
+
+  //목록
+  const $btnFindAll = document.getElementById('btnFindAll');
+  $btnFindAll.addEventListener('click',e=>{
+  location.href = `/bbss`;
+  },false);
+
+  //수정
+const $btnUpdate = document.getElementById('btnUpdate');
+$btnUpdate.addEventListener('click', e => {
+  const $bbsId = document.getElementById('bbsId');
+  const id = $bbsId.value;
+  if (window.confirm('수정하시겠습니까?')) {
+    location.href = `/bbss/${id}/edit`;
+  }
+}, false);
+
+
+
 </script>
 </body>
 </html>

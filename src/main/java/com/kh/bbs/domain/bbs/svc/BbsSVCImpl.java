@@ -22,15 +22,39 @@ public class BbsSVCImpl implements BbsSVC {
     return bbsDAO.write(bbs);
   }
 
+
+  //게시글 삭제(단건)
+  @Override
+  public int deleteById(Long id) {
+    return bbsDAO.deleteById(id);
+  }
+
+
+  //게시글 삭제(여러건)
+  @Override
+  public int deleteByIds(List<Long> ids) {
+    return bbsDAO.deleteByIds(ids);
+  }
+
+
   //게시글 목록
   @Override
   public List<Bbs> findAll() {
     return bbsDAO.findAll();
   }
 
+
   //게시글 상세
   @Override
   public Optional<Bbs> findById(Long id) {
     return bbsDAO.findById(id);
   }
+
+  //게시글 수정
+  @Override
+  public int updateById(Long id, Bbs bbs) {
+    return bbsDAO.updateById(id, bbs);
+  }
+
+
 }
