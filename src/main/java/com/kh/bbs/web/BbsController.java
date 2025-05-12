@@ -4,6 +4,7 @@ package com.kh.bbs.web;
 import com.kh.bbs.domain.bbs.svc.BbsSVC;
 import com.kh.bbs.domain.entity.Bbs;
 import com.kh.bbs.web.form.bbs.DetailForm;
+import com.kh.bbs.web.form.bbs.EditForm;
 import com.kh.bbs.web.form.bbs.WriteForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,9 +111,47 @@ public class BbsController {
 
   //게시글 수정
   @GetMapping("/{id}/edit")
-  public String editById() {
+  public String editById(
+      @PathVariable("id") Long id,
+      Model model
+  ){
+    log.info("id={}", id);
+
+    Optional<Bbs> optionalBbs = bbsSVC.findById(id);
+    Bbs findedBbs = optionalBbs.orElseThrow();
+
+    DetailForm detailForm = new DetailForm();
+    detailForm.setBbsId(findedBbs.getBbsId());
+    detailForm.setBbsHead(findedBbs.getBbsHead());
+    detailForm.setBbsWriter(findedBbs.getBbsWriter());
+    detailForm.setBbsBody(findedBbs.getBbsBody());
+    detailForm.setBbsDate(findedBbs.getBbsDate());
+    detailForm.setBbsUpdate(findedBbs.getBbsUpdate());
+
+    // 모델에 추가
+    model.addAttribute("detailForm", detailForm);
 
     return "bbs/edit";
+  }
 
+  //게시글 수정 처리
+  @PostMapping("/edit")
+  public String edit(
+      @ModelAttribute EditForm editForm,
+      RedirectAttributes redirectAttributes
+  ) {
+    log.info("받은 값: bbsId={}, bbsHead={}, bbsBody={}",
+        editForm.getBbsId(), editForm.getBbsHead(), editForm.getBbsBody());
+
+    Bbs bbs = new Bbs();
+    bbs.setBbsHead(editForm.getBbsHead());
+    bbs.setBbsBody(editForm.getBbsBody());
+    bbs.setBbsWriter(editForm.getBbsWriter());
+    bbs.setBbsUpdate(new Timestamp(System.currentTimeMillis())); // 현재 시간
+
+    bbsSVC.updateById(editForm.getBbsId(), bbs);
+
+    redirectAttributes.addAttribute("id", editForm.getBbsId());
+    return "redirect:/bbss"; // 목록 페이지로 이동
   }
 }

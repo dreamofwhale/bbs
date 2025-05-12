@@ -8,11 +8,23 @@
 </head>
 <body>
 <h2>게시글 수정</h2>  <!-- 제목을 페이지 내에 표시 -->
-<form action="/bbss/eidt" method="POST">
-  <div><label for="">게시글ID</label><input type="text" name ="bbsId" id = "bbsId" th:value="${detailForm.bbsId}" readonly></input></div>  <!-- 게시글ID 표시 -->
-  <div><label for="">제목</label><input type="text" name="bbsHead" th:text="${detailForm.bbsHead}" id=""></div>
-  <div><label for="">작성자</label><input type="text" name ="bbsWriter" th:value="${detailForm.bbsWriter}" readonly></input> </div> <!-- 작성자 표시 -->
-  <div><label for="">내용</label><textarea type="text" name ="bbsBody" th:text="${detailForm.bbsBody}"  rows="10" cols="50"></textarea> </div> <!-- 게시글 내용 표시 -->
+<form action="/bbss/edit" method="POST">
+  <div>
+    <label for="">게시글ID</label>
+    <input type="text" name="bbsId" id="bbsId" th:value="${detailForm.bbsId}" readonly />
+  </div>
+  <div>
+    <label for="">제목</label>
+    <input type="text" name="bbsHead" id="bbsHead" th:value="${detailForm.bbsHead}" />
+  </div>
+  <div>
+    <label for="">작성자</label>
+    <input type="text" name="bbsWriter" id="bbsWriter" th:value="${detailForm.bbsWriter}" readonly />
+  </div>
+  <div>
+    <label for="">내용</label>
+    <textarea name="bbsBody" rows="10" cols="50" th:text="${detailForm.bbsBody}"></textarea>
+  </div>
   <div>
     <button type="submit" id="btnEdit">완료</button>
     <button type="button" id="btnFindAll">목록</button>
