@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -18,6 +19,15 @@ class BbsDAOImplTest {
 
   @Autowired
   BbsDAO bbsDAO;
+
+  @Test
+  @DisplayName("게시글 목록")
+  void findAll() {
+    List<Bbs> list = bbsDAO.findAll();
+    for (Bbs bbs : list) {
+      log.info("bbs={}",bbs);
+    }
+  }
 
   @Test
   @DisplayName("게시글작성")
@@ -31,7 +41,14 @@ class BbsDAOImplTest {
     log.info("bbs={}", bid);
   }
 
-
+  @Test
+  @DisplayName("게시글 조회")
+  void findById() {
+    Long bbsId = 4L;
+    Optional<Bbs> optionalBbs = bbsDAO.findById(bbsId);
+    Bbs findedBbs = optionalBbs.orElseThrow();
+    log.info("findedBbs={}",findedBbs);
+  }
 
   @Test
   @DisplayName("게시글 삭제(단건)")
@@ -42,7 +59,13 @@ class BbsDAOImplTest {
     Assertions.assertThat(rows).isEqualTo(1);
   }
 
-
+  @Test
+  @DisplayName("게시글 삭제(여러건)")
+  void deleteByIds() {
+    List<Long> ids = List.of(33L,35L);
+    int rows = bbsDAO.deleteByIds(ids);
+    Assertions.assertThat(rows).isEqualTo(2);
+  }
 
   @Test
   @DisplayName("게시글 수정")

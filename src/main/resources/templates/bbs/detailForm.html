@@ -5,30 +5,187 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title th:text="${detailForm.bbsHead}">title</title>
+  <link rel="stylesheet" href="" th:href="@{/css/common.css}">
+  <style>
+    body {
+      font-family: "맑은 고딕", Malgun Gothic, "Apple SD Gothic Neo", "Noto Sans KR", "나눔고딕", NanumGothic, sans-serif;
+      color: #222;
+    }
+
+    .head{
+      text-align: center;
+      margin-top: 40px;
+      margin-bottom: 5px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #ccc;
+      margin: 0 0 35px;
+    }
+
+    .table-container {
+      width: 70%;
+      margin: 0 auto 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px #bbb;
+      padding: 35px 30px 45px;
+      position: relative;
+      background: #fff;
+    }
+
+    .btn-container {
+      position: absolute;
+      top: -80px;
+      right: 0;
+    }
+
+    form div {
+      display: flex;
+      margin-bottom: 15px;
+      align-items: center;
+    }
+
+    form div label {
+      font-weight: bold;
+      width: 90px;
+      height: 40px;
+      line-height: 40px;
+      background-color: #f2f4f7;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #555;
+      margin-right: 15px;
+    }
+
+    form .bodyName {
+      font-weight: bold;
+      width: 90px;
+      height: 170px;
+      line-height: 40px;
+      background-color: #f2f4f7;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #555;
+      margin-right: 15px;
+    }
+
+    form div input[type="text"], form div textarea {
+      flex: 1;
+      height: 40px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      padding: 0 10px;
+      font-size: 1em;
+    }
+    form div textarea {
+      height: 160px;
+      padding-top: 8px;
+      resize: vertical;
+    }
+
+    #btnFindAll, #btnUpdate, #btnDelete {
+      font-size: 1em;
+      padding: 7px 14px;
+      margin-left: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #btnUpdate {
+      background-color: #4caf50;
+      border-color: #4caf50;
+      color: white;
+    }
+    #btnUpdate:hover {
+      background-color: #45a049;
+    }
+    #btnFindAll:hover {
+      background-color: #eee;
+    }
+    #btnDelete:hover {
+      background-color: #eee;
+    }
+
+  </style>
 </head>
 <body>
-<form action="" method="">
-  <h2 th:text="${detailForm.bbsHead}">제목</h2>  <!-- 제목을 페이지 내에 표시 -->
-  <div><label for="">게시글ID</label><input type="text" name ="bbsId" id = "bbsId" th:value="${detailForm.bbsId}" readonly></input></div>  <!-- 게시글ID 표시 -->
-  <div><label for="">작성자</label><input type="text" name ="bbsWriter" th:value="${detailForm.bbsWriter}" readonly></input> </div> <!-- 작성자 표시 -->
-  <div><label for="">작성일시</label><input type="text" name ="bbsDate" th:value="${#dates.format(detailForm.bbsDate, 'yyyy-MM-dd HH:mm')}" readonly></input> </div><!-- 작성일자 표시 -->
-  <div><label for="">수정일시</label><input type="text" name ="bbsUpdate" th:value="${#dates.format(detailForm.bbsUpdate, 'yyyy-MM-dd HH:mm')}" readonly></input> </div><!-- 수정일자 표시 -->
-  <div><label for="">내용</label><textarea type="text" name ="bbsBody" th:text="${detailForm.bbsBody}"  rows="10" cols="50" readonly></textarea> </div> <!-- 게시글 내용 표시 -->
-  <div>
-    <button type="button" id="btnUpdate">수정</button>
-    <button type="button" id="btnDelete">삭제</button>
-    <button type="button" id="btnFindAll">목록</button>
-  </div>
-</form>
+<h1 class="head" th:text="${detailForm.bbsHead}">제목</h1>  <!-- 제목을 페이지 내에 표시 -->
+<hr>
+<div class="table-container">
+  <form action="" method="">
+    <div class="btn-container">
+      <button type="button" id="btnUpdate">수정</button>
+      <button type="button" id="btnDelete">삭제</button>
+      <button type="button" id="btnFindAll">목록</button>
+    </div>
+    <div>
+      <label for="">게시글ID</label>
+      <input type="text" name="bbsId" id="bbsId" th:value="${detailForm.bbsId}" readonly></input>
+    </div>  <!-- 게시글ID 표시 -->
+    <div>
+      <label for="">작성자</label>
+      <input type="text" name="bbsWriter" th:value="${detailForm.bbsWriter}" readonly></input>
+    </div> <!-- 작성자 표시 -->
+    <div>
+      <label for="">작성일시</label>
+      <input type="text" name="bbsDate" th:value="${#dates.format(detailForm.bbsDate, 'yyyy-MM-dd HH:mm')}"
+             readonly></input>
+    </div><!-- 작성일자 표시 -->
+    <div>
+      <label for="">수정일시</label>
+      <input type="text" name="bbsUpdate" th:value="${#dates.format(detailForm.bbsUpdate, 'yyyy-MM-dd HH:mm')}"
+             readonly></input>
+    </div><!-- 수정일자 표시 -->
+    <div>
+      <label class="bodyName" for="">본문</label>
+      <textarea type="text" name="bbsBody" th:text="${detailForm.bbsBody}" rows="10" cols="50" readonly></textarea>
+    </div> <!-- 게시글 내용 표시 -->
+  </form>
+  <dialog id="modalDel">
+    <p>삭제하겠습니까?</p>
+    <button class="btnYes">예</button>
+    <button class="btnNo">아니오</button>
+  </dialog>
+
+</div>
 <script>
   //삭제
   const $btnDelete = document.getElementById('btnDelete');
   $btnDelete.addEventListener('click', e=>{
     const $bbsId = document.getElementById('bbsId');
     const id = $bbsId.value;
-  if(window.confirm('삭제하시겠습니까?')){
-    location.href = `/bbss/${id}/del`;
-   }
+ // if(window.confirm('삭제하시겠습니까?')){
+ //    location.href = `/bbss/${id}/del`;
+ //  }
+
+    const $modalDel = document.getElementById("modalDel");
+    const $btnYes = document.querySelector(".btnYes");
+    const $btnNo = document.querySelector(".btnNo");
+
+    //모달창 띄우기
+    $modalDel.showModal();
+
+    $modalDel.addEventListener('click',e=>{
+      console.log($modalDel.returnValue);
+      if($modalDel.returnValue == 'yes'){
+        location.href = `/bbss/${id}/del`;
+      }else{
+        return;
+      }
+    });
+
+    $btnYes.addEventListener('click',e=>{
+      $modalDel.close("yes");
+    });
+
+    $btnNo.addEventListener('click',e=>{
+      $modalDel.close("no");
+    });
   }, false);
 
   //목록
@@ -46,7 +203,6 @@ $btnUpdate.addEventListener('click', e => {
     location.href = `/bbss/${id}/edit`;
   }
 }, false);
-
 
 
 </script>

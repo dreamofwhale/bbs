@@ -1,42 +1,183 @@
 <!DOCTYPE html>
-<html lang="ko"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>게시글 수정</title>
+  <style>
+    body {
+      font-family: "맑은 고딕", Malgun Gothic, "Apple SD Gothic Neo", "Noto Sans KR", "나눔고딕", NanumGothic,
+        sans-serif;
+      color: #222;
+    }
+    .head {
+      text-align: center;
+      margin-top: 40px;
+      margin-bottom: 5px;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #ccc;
+      margin: 0 0 35px;
+    }
+    .table-container {
+      width: 70%;
+      margin: 0 auto 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 5px #bbb;
+      padding: 35px 30px 45px;
+      position: relative;
+      background: #fff;
+    }
+    form div {
+      display: flex;
+      margin-bottom: 15px;
+      align-items: center;
+    }
+    form div label {
+      font-weight: bold;
+      width: 90px;
+      height: 40px;
+      line-height: 40px;
+      background-color: #f2f4f7;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #555;
+      margin-right: 15px;
+    }
+    form .bodyName {
+      font-weight: bold;
+      width: 90px;
+      height: 170px;
+      line-height: 40px;
+      background-color: #f2f4f7;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.9em;
+      color: #555;
+      margin-right: 15px;
+    }
+    form div input[type="text"],
+    form div textarea {
+      flex: 1;
+      height: 40px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      padding: 0 10px;
+      font-size: 1em;
+    }
+    form div textarea {
+      height: 160px;
+      padding-top: 8px;
+      resize: vertical;
+    }
+    .btn-container {
+      position: absolute;
+      top: -80px;
+      right: 0;
+    }
+    #btnCancel,
+    #btnEdit {
+      font-size: 1em;
+      padding: 7px 14px;
+      margin-left: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #btnEdit {
+      background-color: #4caf50;
+      border-color: #4caf50;
+      color: white;
+    }
+    #btnEdit:hover {
+      background-color: #45a049;
+    }
+    #btnCancel:hover {
+      background-color: #eee;
+    }
+    .field-err {
+      color: red;
+      font-size: 0.85em;
+      margin-left: 105px;
+      margin-top: -12px;
+      margin-bottom: 5px;
+      display: block;
+      min-height: 20px;
+    }
+  </style>
 </head>
 <body>
-<h2>게시글 수정</h2>  <!-- 제목을 페이지 내에 표시 -->
-<form action="/bbss/edit" method="POST">
-  <div>
-    <label for="">게시글ID</label>
-    <input type="text" name="bbsId" id="bbsId" th:value="${detailForm.bbsId}" readonly />
-  </div>
-  <div>
-    <label for="">제목</label>
-    <input type="text" name="bbsHead" id="bbsHead" th:value="${detailForm.bbsHead}" />
-  </div>
-  <div>
-    <label for="">작성자</label>
-    <input type="text" name="bbsWriter" id="bbsWriter" th:value="${detailForm.bbsWriter}" readonly />
-  </div>
-  <div>
-    <label for="">내용</label>
-    <textarea name="bbsBody" rows="10" cols="50" th:text="${detailForm.bbsBody}"></textarea>
-  </div>
-  <div>
-    <button type="submit" id="btnEdit">완료</button>
-    <button type="button" id="btnFindAll">목록</button>
-  </div>
-</form>
-<script>
-  //목록
-  const btnFindAll = document.getElementById('btnFindAll');
-  btnFindAll.addEventListener('click',e=>{
-    location.href = '/bbss';   // GET http://localhost:9080/bbss
+<h1 class="head">게시글 수정</h1>
+<hr />
+<div class="table-container">
+  <form id="frm" action="/bbss/edit" method="POST">
+    <div class="btn-container">
+      <button type="submit" id="btnEdit">완료</button>
+      <button type="button" id="btnCancel">취소</button>
+    </div>
+    <div>
+      <label for="bbsId">게시글ID</label>
+      <input type="text" name="bbsId" id="bbsId" th:value="${detailForm.bbsId}" readonly />
+    </div>
+
+    <div>
+      <label for="bbsHead">제목</label>
+      <input type="text" name="bbsHead" id="bbsHead" th:value="${detailForm.bbsHead}" />
+    </div>
+    <span id="errBbsHead" class="field-err"></span>
+
+    <div>
+      <label for="bbsWriter">작성자</label>
+      <input type="text" name="bbsWriter" id="bbsWriter" th:value="${detailForm.bbsWriter}" readonly />
+    </div>
+
+    <div>
+      <label class="bodyName" for="bbsBody">본문</label>
+      <textarea name="bbsBody" id="bbsBody" rows="10" cols="50" th:text="${detailForm.bbsBody}"></textarea>
+    </div>
+    <span id="errBbsBody" class="field-err"></span>
+  </form>
+</div>
+
+<script th:inline="javascript" type="module">
+  import { getBytesSize } from '/js/common.js';
+
+  btnEdit.addEventListener('click', e => {
+    e.preventDefault();
+
+    // 제목 유효성 검사
+    if (bbsHead.value.length === 0) {
+      errBbsHead.textContent = '게시글의 제목을 입력하세요';
+      bbsHead.focus();
+      return;
+    } else if (getBytesSize(bbsHead.value) > 60) {
+      errBbsHead.textContent = '제목은 20자를 초과할 수 없습니다.';
+      bbsHead.focus();
+      return;
+    } else {
+      errBbsHead.textContent = '';
+    }
+
+    // 본문 유효성 검사
+    if (bbsBody.value.length === 0) {
+      errBbsBody.textContent = '본문을 입력하세요.';
+      bbsBody.focus();
+      return;
+    } else {
+      errBbsBody.textContent = '';
+    }
+
+    frm.submit();
   });
 
+  const id = /*[[${detailForm.bbsId}]]*/ 0;
+  btnCancel.addEventListener('click', (e) => {
+    location.href = '/bbss/' + id;
+  });
 </script>
 </body>
 </html>

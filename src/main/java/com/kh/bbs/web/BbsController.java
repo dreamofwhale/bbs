@@ -6,10 +6,12 @@ import com.kh.bbs.domain.entity.Bbs;
 import com.kh.bbs.web.form.bbs.DetailForm;
 import com.kh.bbs.web.form.bbs.EditForm;
 import com.kh.bbs.web.form.bbs.WriteForm;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -35,20 +37,32 @@ public class BbsController {
 
   //게시글 작성화면
   @GetMapping("/write")     //Get http://localhost:9080/bbss/write
-  public String writeForm() {
-
+  public String writeForm(Model model) {
+    model.addAttribute("writeForm", new WriteForm());
     return "bbs/write";
   }
 
   //게시글 작성 처리
   @PostMapping("/write")
   public String write(
-      WriteForm writeForm,
-      RedirectAttributes redirectAttributes
+      @Valid @ModelAttribute WriteForm writeForm,
+      BindingResult bindingResult,
+      RedirectAttributes redirectAttributes,
+      Model model
 
   ) {
     log.info("bbsHead={}, bbsWriter={}, bbsBody={}", writeForm.getBbsHead(), writeForm.getBbsWriter(), writeForm.getBbsBody());
 
+
+    //1)유효성 체크
+    //1-1) 어노테이션 기반의 필드 검증
+    if (bindingResult.hasErrors()) {
+      log.info("bindingResult={}", bindingResult);
+      return "bbs/write";
+    }
+    
+    
+    //2) 정상로직
     Bbs bbs = new Bbs();
     bbs.setBbsHead(writeForm.getBbsHead());
     bbs.setBbsWriter(writeForm.getBbsWriter());

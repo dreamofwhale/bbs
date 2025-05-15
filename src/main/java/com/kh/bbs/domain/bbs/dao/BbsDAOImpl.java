@@ -105,7 +105,7 @@ class BbsDAOImpl implements BbsDAO {
   }
 
 
-  //게시글 상세
+  //게시글 조회
   @Override
   public Optional<Bbs> findById(Long id) {
     StringBuffer sql = new StringBuffer();

@@ -8,6 +8,10 @@ spring:
     url: jdbc:oracle:thin:@localhost:1521/xe
     username: c##bbs
     password: bbs1234
+  #ai
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
 
 # 웹서버 포트
 server:
