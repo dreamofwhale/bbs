@@ -7,15 +7,15 @@ const recordsPerPage = 10;        // 페이지당 레코드수
 const pagesPerPage = 10;          // 한페이지당 페이지수
 
 //댓글 등록
-const add = async product => {
+const writeBbs = async bbs => {
   try {
     const url = '/api/bbss';
-    const result = await ajax.post(url, product);
+    const result = await ajax.post(url, bbs);
     if (result.header.rtcd === 'S00') {
       console.log(result.body);
       frm.reset();
       initialPage = 1; // 생성 후 1페이지로 이동
-      getProducts(initialPage, recordsPerPage); // 첫 페이지의 기본 레코드로 호출
+      getBbss(initialPage, recordsPerPage); // 첫 페이지의 기본 레코드로 호출
       configPagination();
     } else if(result.header.rtcd.substr(0,1) == 'E'){
         for(let key in result.header.details){
@@ -29,7 +29,7 @@ const add = async product => {
   }
 };
 
-//상품조회
+//게시글 조회
 const getBbs = async bid => {
   try {
     const url = `/api/bbss/${bid}`;
@@ -38,15 +38,19 @@ const getBbs = async bid => {
     if (result.header.rtcd === 'S00') {
       console.log(result.body);
       // productId2.value = result.body.productId;
-      productId2.setAttribute('value', result.body.productId);
-      pname2.setAttribute('value', result.body.pname);
-      quantity2.setAttribute('value', result.body.quantity);
-      price2.setAttribute('value', result.body.price);
+      bbsId2.setAttribute('value', result.body.bbsId);
+      bbsHead2.setAttribute('value', result.body.bbsHead);
+      bbsBody2.setAttribute('value', result.body.bbsBody);
+      bbsWriter2.setAttribute('value', result.body.bbsWriter);
+      bbsDate2.setAttribute('value', result.body.bbsDate);
+      bbsUpdate2.setAttribute('value', result.body.bbsUpdate);
 
-      productId2.value = result.body.productId;
-      pname2.value = result.body.pname;
-      quantity2.value =  result.body.quantity;
-      price2.value = result.body.price;
+      bbsId2.value = result.body.bbsId;
+      bbsHead2.value = result.body.bbsHead;
+      bbsBody2.value =  result.body.bbsBody;
+      bbsWriter2.value =  result.body.bbsWriter;
+      bbsDate2.value =  result.body.bbsDate;
+      bbsUpdate2.value = result.body.bbsUpdate;
 
     } else if(result.header.rtcd.substr(0,1) == 'E'){
         for(let key in result.header.details){
@@ -60,17 +64,17 @@ const getBbs = async bid => {
   }
 };
 
-//상품삭제
-const delProduct = async (pid, frm) => {
+//게시글 삭제
+const delBbs = async (bid, frm) => {
   try {
-    const url = `/api/products/${pid}`;
+    const url = `/api/bbss/${bid}`;
     const result = await ajax.delete(url);
     console.log(result);
     if (result.header.rtcd === 'S00') {
       console.log(result.body);
       const $inputs = frm.querySelectorAll('input');
       [...$inputs].forEach(ele => (ele.value = '')); //폼필드 초기화
-      getProducts(currentPage, recordsPerPage); // 현재 페이지의 기본 레코드로 호출
+      getBbss(currentPage, recordsPerPage); // 현재 페이지의 기본 레코드로 호출
     } else if(result.header.rtcd.substr(0,1) == 'E'){
         for(let key in result.header.details){
             console.log(`필드명:${key}, 오류:${result.header.details[key]}`);
@@ -83,11 +87,11 @@ const delProduct = async (pid, frm) => {
   }
 };
 
-//상품수정
-const modifyProduct = async (pid, product) => {
+//게시글 수정
+const modifyBbs = async (bid, bbs) => {
   try {
-    const url = `/api/products/${pid}`;
-    const result = await ajax.patch(url, product);
+    const url = `/api/bbss/${bid}`;
+    const result = await ajax.patch(url, bbs);
     if (result.header.rtcd === 'S00') {
       console.log(result.body);
       getProducts(currentPage, recordsPerPage); // 현재 페이지의 기본 레코드로 호출
@@ -103,16 +107,16 @@ const modifyProduct = async (pid, product) => {
   }
 };
 
-//상품목록
-const getProducts = async (reqPage, reqRec) => {
+//게시글 목록
+const getBbss = async (reqPage, reqRec) => {
 
   try {
-    const url = `/api/products/paging?pageNo=${reqPage}&numOfRows=${reqRec}`;
+    const url = `/api/bbss/paging?pageNo=${reqPage}&numOfRows=${reqRec}`;
     const result = await ajax.get(url);
 
     if (result.header.rtcd === 'S00') {
       currentPage = reqPage; // 현재 페이지 업데이트
-      displayProductList(result.body);
+      displayBbsList(result.body);
 
     } else {
       alert(result.header.rtmsg);
@@ -122,72 +126,72 @@ const getProducts = async (reqPage, reqRec) => {
   }
 };
 
-//상품등록 화면
+//게시글 등록 화면
 function displayForm() {
-  //상품등록
-  const $addFormWrap = document.createElement('div');
-  $addFormWrap.innerHTML = `
+  //게시글 등록
+  const $writeFormWrap = document.createElement('div');
+  $writeFormWrap.innerHTML = `
     <form id="frm">
       <div>
-          <label for="pname">상품명</label>
-          <input type="text" id="pname" name="pname"/>
-          <span class="field-error client" id="errPname"></span>
+          <label for="bbsHead">제목</label>
+          <input type="text" id="bbsHead" name="bbsHead"/>
+          <span class="field-error client" id="errBbsHead"></span>
       </div>
       <div>
-          <label for="quantity">수량</label>
-          <input type="text" id="quantity" name="quantity"/>
-          <span class="field-error client" id="errQuantity"></span>
+          <label for="bbsWriter">작성자</label>
+          <input type="text" id="bbsWriter" name="bbsWriter"/>
+          <span class="field-error client" id="errBbsWriter"></span>
       </div>
       <div>
-          <label for="price">가격</label>
-          <input type="text" id="price" name="price"/>
-          <span class="field-error client" id="errPrice"></span>
+          <label for="bbsBody">본문</label>
+          <input type="textarea" id="bbsBody" name="bbsBody"/>
+          <span class="field-error client" id="errBbsBody"></span>
       </div>
       <div>
           <button id="btnAdd" type="submit">등록</button>
       </div>
     </form>
   `;
-  document.body.insertAdjacentElement('afterbegin', $addFormWrap);
-  const $frm = $addFormWrap.querySelector('#frm');
+  document.body.insertAdjacentElement('afterbegin', $writeFormWrap);
+  const $frm = $writeFormWrap.querySelector('#frm');
   $frm.addEventListener('submit', e => {
     e.preventDefault(); // 기본동작 중지
 
     //유효성 체크
-    if($frm.pname.value.trim().length === 0) {
-      errPname.textContent = '상품명은 필수 입니다';
-      $frm.pname.focus();
+    if($frm.bbsHead.value.trim().length === 0) {
+      errBbsHead.textContent = '제목은 필수 입니다';
+      $frm.bbsHead.focus();
       return;
     }
-    if($frm.quantity.value.trim().length === 0) {
-      errQuantity.textContent = '수량 필수 입니다';
-      $frm.quantity.focus();
+    if($frm.bbsWriter.value.trim().length === 0) {
+      errBbsWriter.textContent = '작성자는 필수 입니다';
+      $frm.bbsWriter.focus();
       return;
     }
-    if($frm.price.value.trim().length === 0) {
-      errPrice.textContent = '가격은 필수 입니다';
-      $frm.price.focus();
+    if($frm.bbsBody.value.trim().length === 0) {
+      errBbsBody.textContent = '본문은 필수 입니다';
+      $frm.bbsBody.focus();
       return;
     }
 
     const formData = new FormData(e.target); //폼데이터가져오기
-    const product = {};
+    const bbs = {};
     [...formData.keys()].forEach(
-      ele => (product[ele] = formData.get(ele)),
-    ); // {pname:'책상', quantitiy:10, price:100 }
+      ele => (bbs[ele] = formData.get(ele)),
+    );
 
-    addProduct(product);
+    writeBbs(bbs);
 
   });
 }
 
-//상품조회 화면
+//게시글 조회 화면
 function displayReadForm() {
   //상태 : 조회 mode-read, 편집 mode-edit
   const changeEditMode = frm => {
     frm.classList.toggle('mode-edit', true);
     [...frm.querySelectorAll('input')]
-      .filter(input => input.name !== 'productId')
+      .filter(input => input.name !== 'bbsId')
       .forEach(input => input.removeAttribute('readonly'));
 
     const $btns = frm.querySelector('.btns');
@@ -202,14 +206,14 @@ function displayReadForm() {
     //저장
     $btnSave.addEventListener('click', e => {
       const formData = new FormData(frm); //폼데이터가져오기
-      const product = {};
+      const bbs = {};
 
       [...formData.keys()].forEach(
-        ele => (product[ele] = formData.get(ele)),
-      ); // {pname:'책상', quantitiy:10, price:100 }
+        ele => (bbs[ele] = formData.get(ele)),
+      );
 
-      modifyProduct(product.productId, product); //수정
-      getProduct(product.productId); //조회
+      modifyBbs(bbs.bbsId, bbs); //수정
+      getBbs(bbs.bbsId); //조회
       changeReadMode(frm); //읽기모드
     });
 
@@ -223,7 +227,7 @@ function displayReadForm() {
   const changeReadMode = frm => {
     frm.classList.toggle('mode-read', true);
     [...frm.querySelectorAll('input')]
-      .filter(input => input.name !== 'productId')
+      .filter(input => input.name !== 'bbsId')
       .forEach(input => input.setAttribute('readonly', ''));
 
     const $btns = frm.querySelector('.btns');
@@ -242,14 +246,14 @@ function displayReadForm() {
 
     //삭제
     $btnDelete.addEventListener('click', e => {
-      const pid = frm.productId.value;
-      if (!pid) {
-        alert('상품조회 후 삭제바랍니다.');
+      const bid = frm.bbsId.value;
+      if (!bid) {
+        alert('게시글 조회 후 삭제바랍니다.');
         return;
       }
 
       if (!confirm('삭제하시겠습니까?')) return;
-      delProduct(pid, frm);
+      delBbs(bid, frm);
     });
   };
 
@@ -258,22 +262,31 @@ function displayReadForm() {
     <form id="frm2">
 
       <div>
-          <label for="productId2">상품아이디</label>
-          <input type="text" id="productId2" name="productId" readonly/>
+          <label for="bbsId2">게시글 아이디</label>
+          <input type="text" id="bbsId2" name="bbsId" readonly/>
       </div>
       <div>
-          <label for="pname">상품명</label>
-          <input type="text" id="pname2" name="pname"/>
+          <label for="bbsHead">제목</label>
+          <input type="text" id="bbsHead2" name="bbsHead"/>
       </div>
       <div>
-          <label for="quantity">수량</label>
-          <input type="text" id="quantity2" name="quantity"/>
+          <label for="bbsWriter">작성자</label>
+          <input type="text" id="bbsWriter2" name="bbsWriter"/>
       </div>
       </div>
       <div>
-          <label for="price">가격</label>
-          <input type="text" id="price2" name="price"/>
+          <label for="bbsBody">본문</label>
+          <input type="text" id="bbsBody2" name="bbsBody"/>
       </div>
+        <div>
+          <label for="bbsDate2">작성일</label>
+          <input type="text" id="bbsDate2" name="bbsDate" readonly/>
+        </div>
+        <div>
+          <label for="bbsUpdate2">수정일</label>
+          <input type="text" id="bbsUpdate2" name="bbsUpdate" readonly/>
+        </div>
+        <div class='btns'></div>
       </div>
       <div class='btns'></div>
 
@@ -284,16 +297,16 @@ function displayReadForm() {
   changeReadMode($frm2);
 }
 
-//상품목록 화면
-function displayProductList(products) {
+//게시글 목록 화면
+function displayBbsList(bbss) {
 
-  const makeTr = products => {
-    const $tr = products
+  const makeTr = bbss => {
+    const $tr = bbss
       .map(
-        product =>
-          `<tr data-pid=${product.productId}>
-            <td>${product.productId}</td>
-            <td>${product.pname}</td></tr>`,
+        bbs =>
+          `<tr data-bid=${bbs.bbsId}>
+            <td>${bbs.bbsId}</td>
+            <td>${bbs.bbsHead}</td></tr>`,
       )
       .join('');
     return $tr;
@@ -301,25 +314,25 @@ function displayProductList(products) {
 
   $list.innerHTML = `
     <table>
-      <caption> 상 품 목 록 </caption>
+      <caption> 게 시 글 목 록 </caption>
       <thead>
         <tr>
-          <th>상품번호</th>
-          <th>상품명</th>
+          <th>게시글번호</th>
+          <th>제목</th>
         </tr>
       </thead>
       <tbody>
-        ${makeTr(products)}
+        ${makeTr(bbss)}
       </tbody>
     </table>`;
 
-  const $products = $list.querySelectorAll('table tbody tr');
+  const $bbss = $list.querySelectorAll('table tbody tr');
 
-  // Array.from($products)
-  [...$products].forEach(product =>
-    product.addEventListener('click', e => {
-      const pid = e.currentTarget.dataset.pid;
-      getProduct(pid);
+  // Array.from($bbss)
+  [...$bbss].forEach(bbs =>
+    bbs.addEventListener('click', e => {
+      const bid = e.currentTarget.dataset.bid;
+      getBbs(bid);
     }),
   );
 }
@@ -337,14 +350,14 @@ divEle.setAttribute('id','reply_pagenation');
 document.body.appendChild(divEle);
 
 async function configPagination(){
-  const url = '/api/products/totCnt';
+  const url = '/api/bbss/totCnt';
   try {
     const result = await ajax.get(url);
 
     const totalRecords = result.body; // 전체 레코드수
 
     const handlePageChange = (reqPage)=>{
-      return getProducts(reqPage,recordsPerPage);
+      return getBbss(reqPage,recordsPerPage);
     };
 
     // Pagination UI 초기화

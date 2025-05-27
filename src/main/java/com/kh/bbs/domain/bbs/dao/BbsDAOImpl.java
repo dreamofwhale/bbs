@@ -124,6 +124,33 @@ class BbsDAOImpl implements BbsDAO {
 
     return Optional.of(bbs);
   }
+  //게시글 목록 - 페이징
+  @Override
+  public List<Bbs> findAll(int pageNo, int numOfRows) {
+    //sql
+    StringBuffer sql = new StringBuffer();
+    sql.append(" SELECT bbs_id, bbs_HEAD, bbs_BODY, bbs_WRITER, bbs_date, bbs_update  ");
+    sql.append("   FROM bbs  ");
+    sql.append(" ORDER BY bbs_id DESC  ");
+    sql.append("  OFFSET (:pageNo -1) * :numOfRows ROWS  ");
+    sql.append(" FETCH NEXT :numOfRows ROWS only  ");
+
+    Map<String, Integer> map = Map.of("pageNo",pageNo,"numOfRows",numOfRows);
+    List<Bbs> list = template.query(sql.toString(), map, bbsRowMapper());
+
+    return list;
+  }
+
+  //게시글 총 건수
+  @Override
+  public int getTotalCount() {
+    String sql = "select count(bbs_id) from bbs ";
+
+    SqlParameterSource param = new MapSqlParameterSource();
+    int i = template.queryForObject(sql, param, Integer.class);
+
+    return i;
+  }
 
   /**
    * 게시글 수정

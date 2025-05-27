@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/csr")
 public class CsrController {
+
   @GetMapping("/bbss")
   public  String bbss() {
+
     return "csr/bbs/bbs";
+
   }
 }

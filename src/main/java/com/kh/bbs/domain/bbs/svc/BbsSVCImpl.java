@@ -50,6 +50,18 @@ public class BbsSVCImpl implements BbsSVC {
     return bbsDAO.findById(id);
   }
 
+  //게시글 목록-페이징
+  @Override
+  public List<Bbs> findAll(int pageNo, int numOfRows) {
+    return bbsDAO.findAll(pageNo, numOfRows);
+  }
+
+  //게시글 총건수
+  @Override
+  public int getTotalCount() {
+    return bbsDAO.getTotalCount();
+  }
+
   //게시글 수정
   @Override
   public int updateById(Long id, Bbs bbs) {

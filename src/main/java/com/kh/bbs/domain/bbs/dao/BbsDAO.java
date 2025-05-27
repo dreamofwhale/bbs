@@ -20,6 +20,20 @@ public interface BbsDAO {
 
   Optional<Bbs> findById(Long id);
 
+  /**
+   * 게시글목록 페이징
+   * @param pageNo 요청 페이지
+   * @param numOfRows 요청 페이지 레코드 수
+   * @return 상품목록
+   */
+  List<Bbs> findAll(int pageNo, int numOfRows);
+
+  /**
+   *  게시글 총 건수
+   * @return 총 건수
+   */
+  int getTotalCount();
+  
   //게시글 수정
   int updateById(Long bbsId, Bbs bbs);
 
