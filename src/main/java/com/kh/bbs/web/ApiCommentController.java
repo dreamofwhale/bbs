@@ -26,42 +26,51 @@ public class ApiCommentController {
 
   // 댓글 목록 조회
   @GetMapping
-  public ResponseEntity<ApiResponse<List<Comm>>> findAllByBbsId(@PathVariable Long bbsId) {
+  public ResponseEntity<ApiResponse<List<Comm>>> findAllByBbsId(@PathVariable("bbsId") Long bbsId) {
     List<Comm> list = commSVC.findAllByBbsId(bbsId);
-    ApiResponse<List<Comm>> res = ApiResponse.of(ApiResponseCode.SUCCESS, list);
-    return ResponseEntity.ok(res);
+    return ResponseEntity.ok(ApiResponse.of(ApiResponseCode.SUCCESS, list));
   }
 
   // 댓글 등록
   @PostMapping
-  public ResponseEntity<ApiResponse<Comm>> write(@PathVariable Long bbsId,
-                                                 @RequestBody @Valid WriteApi writeApi) {
+  public ResponseEntity<ApiResponse<Comm>> write(
+      @PathVariable("bbsId") Long bbsId,
+      @RequestBody @Valid WriteApi writeApi) {
+
     try {
       Comm comm = new Comm();
       BeanUtils.copyProperties(writeApi, comm);
       comm.setBbsId(bbsId);
-      int rows = commSVC.write(comm);
-      if (rows > 0) {
+
+      // Long 타입으로 반환된 댓글 ID 받기
+      Long commId = commSVC.write(comm);
+
+      if (commId != null && commId > 0) {
+        comm.setCommId(commId);  // 생성된 댓글 ID를 객체에 세팅
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(ApiResponse.of(ApiResponseCode.SUCCESS, comm));
       }
+
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
           .body(ApiResponse.of(ApiResponseCode.INTERNAL_SERVER_ERROR, null));
     } catch (Exception e) {
       log.error("댓글 등록 중 예외 발생", e);
-      throw e;  // 예외 다시 던져서 스프링 로그 기본 출력
+      throw e; // 예외 다시 던져서 스프링 로그 기본 출력
     }
   }
 
   // 댓글 수정
   @PatchMapping("/{commId}")
-  public ResponseEntity<ApiResponse<Comm>> updateById(@PathVariable Long bbsId, @PathVariable Long commId, @RequestBody @Valid EditApi editApi) {
+  public ResponseEntity<ApiResponse<Comm>> updateById(
+      @PathVariable("bbsId") Long bbsId,
+      @PathVariable("commId") Long commId,
+      @RequestBody @Valid EditApi editApi) {
     try {
       Comm comm = new Comm();
       BeanUtils.copyProperties(editApi, comm);
       comm.setCommId(commId);
       comm.setBbsId(bbsId);
-      int rows = commSVC.updateById(comm);
+      int rows = commSVC.updateById(commId,comm);
       if(rows > 0) {
         ApiResponse<Comm> res = ApiResponse.of(ApiResponseCode.SUCCESS, comm);
         return ResponseEntity.ok(res);
@@ -78,7 +87,9 @@ public class ApiCommentController {
 
   // 댓글 삭제
   @DeleteMapping("/{commId}")
-  public ResponseEntity<ApiResponse<Void>> deleteById(@PathVariable Long bbsId, @PathVariable Long commId) {
+  public ResponseEntity<ApiResponse<Void>> deleteById(
+      @PathVariable("bbsId") Long bbsId,
+      @PathVariable("commId") Long commId) {
     try {
       int rows = commSVC.deleteById(commId);
       if(rows > 0) {

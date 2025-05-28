@@ -19,16 +19,16 @@ public interface CommDAO {
    * @param comm 등록할 댓글 객체
    * @return 등록 성공 시 영향받은 행 수 (보통 1)
    */
-  int write(Comm comm);
+  Long write(Comm comm);
 
   /**
    * 댓글 번호로 댓글 수정
    *
-   * @param id 댓글 아이디
+   * @param commid 댓글 아이디
    * @param comm 수정할 댓글 데이터
    * @return 수정 성공 건수
    */
-  int updateById(Long id, Comm comm);
+  int updateById(Long commid, Comm comm);
 
   /**
    * 댓글 단건 삭제

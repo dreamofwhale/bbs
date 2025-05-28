@@ -21,14 +21,14 @@ public interface CommSVC {
    * @param comm 등록할 댓글 객체
    * @return 영향을 받은 행 수 (1이면 성공)
    */
-  int write(Comm comm);
+  Long write(Comm comm);
 
   /**
    * 댓글 수정
    * @param comm 수정할 댓글 객체
    * @return 영향을 받은 행 수
    */
-  int updateById(Comm comm);
+  int updateById(Long id,Comm comm);
 
   /**
    * 댓글 단건 삭제

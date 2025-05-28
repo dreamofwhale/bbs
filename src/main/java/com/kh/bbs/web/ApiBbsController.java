@@ -60,7 +60,7 @@ public class ApiBbsController {
     return ResponseEntity.ok(bbsApiResponse);  //상태코드 200, 응답메세지Body:productApiResponse객채가 json포맷 문자열로 변환됨
   }
 
-  //게시글 수정      //   PATCH   /bbss/{id} =>  PATCH http://localhost:9080/api/bbss/{id}
+  //게시글 수정      //   PATCH   /bbss/{id} =>  PATCH http://localhost:9081/api/bbss/{id}
   @PatchMapping("/{id}")
   public ResponseEntity<ApiResponse<Bbs>> updateById(
       @PathVariable("id") Long id,

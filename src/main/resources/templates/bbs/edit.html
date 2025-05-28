@@ -146,6 +146,8 @@
 <script th:inline="javascript" type="module">
   import { getBytesSize } from '/js/common.js';
 
+  const id = /*[[${detailForm.bbsId}]]*/ 0;
+
   btnEdit.addEventListener('click', e => {
     e.preventDefault();
 
@@ -172,9 +174,9 @@
     }
 
     frm.submit();
-  });
 
-  const id = /*[[${detailForm.bbsId}]]*/ 0;
+  }, false);
+
   btnCancel.addEventListener('click', (e) => {
     location.href = '/bbss/' + id;
   });

@@ -27,3 +27,4 @@ btnDelete.addEventListener('click', e=>{
 btnList.addEventListener('click', e=>{
   location.href = '/bbss';               // GET http://localhost:9080/bbs
 });
+

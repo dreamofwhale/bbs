@@ -21,12 +21,12 @@ public class CommSVCImpl implements CommSVC {
   }
 
   @Override
-  public int write(Comm comm) {
+  public Long write(Comm comm) {
     return commDAO.write(comm);
   }
 
   @Override
-  public int updateById(Comm comm) {
+  public int updateById(Long id,Comm comm) {
     return commDAO.updateById(comm.getCommId(), comm);
   }
 
