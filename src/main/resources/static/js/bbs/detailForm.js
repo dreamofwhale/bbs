@@ -1,7 +1,7 @@
 //수정
 btnUpdate.addEventListener('click', e=>{
   const id = bbsId.value;
-  location.href = `/bbss/${id}/edit`;     // GET http://localhost:9080/bbss/{id}/edit
+  location.href = `/bbss/${id}/edit`;     // GET http://localhost:9081/bbss/{id}/edit
 });
 
 //삭제
@@ -16,7 +16,7 @@ btnDelete.addEventListener('click', e=>{
     const id = bbsId.value;
     $btnYes = document.querySelector('#modalDel .btnYes');
     if(modalDel.returnValue == $btnYes.value){
-      location.href = `/bbss/${id}/del`;     // GET http://localhost:9080/bbss/{id}/delete
+      location.href = `/bbss/${id}/del`;     // GET http://localhost:9081/bbss/{id}/delete
     }else{
       return;
     }
@@ -25,6 +25,6 @@ btnDelete.addEventListener('click', e=>{
 
 //목록
 btnList.addEventListener('click', e=>{
-  location.href = '/bbss';               // GET http://localhost:9080/bbs
+  location.href = '/bbss';               // GET http://localhost:9081/bbs
 });
 

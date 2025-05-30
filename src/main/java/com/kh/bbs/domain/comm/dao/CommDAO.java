@@ -24,11 +24,11 @@ public interface CommDAO {
   /**
    * 댓글 번호로 댓글 수정
    *
-   * @param commid 댓글 아이디
+   * @param commId 댓글 아이디
    * @param comm 수정할 댓글 데이터
    * @return 수정 성공 건수
    */
-  int updateById(Long commid, Comm comm);
+  int updateById(Long commId, Comm comm);
 
   /**
    * 댓글 단건 삭제
